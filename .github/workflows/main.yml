@@ -20,7 +20,7 @@ jobs:
           node-version: 18
 
       - name: Install Dependencies
-        working-directory: ./infra
+        working-directory: ./ppinfra
         run: npm install
 
       - uses: pulumi/actions@v5
