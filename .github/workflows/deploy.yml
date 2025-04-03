@@ -25,12 +25,12 @@ jobs:
         working-directory: ./ppinfra
         run: npm install
 
-      - uses: pulumi/actions@v5
+      - name: Pulumi Up
+        uses: pulumi/actions@v5
         with:
           command: up
           stack-name: siddharthpal18/myworkshop/Lab8
           work-dir: ./ppinfra
+          environment: aws-oidc-env    # ✅ THIS IS THE MISSING LINE
         env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN}}
-          
-          
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
