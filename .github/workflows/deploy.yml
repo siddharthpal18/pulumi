@@ -26,14 +26,14 @@ jobs:
         working-directory: ./ppinfra
         run: npm install
 
-      - name: Pulumi Up (with OIDC role)
+      - name: Pulumi Up (via OIDC)
         uses: pulumi/actions@v5
         with:
           command: up
           stack-name: siddharthpal18/myworkshop/Lab8
           work-dir: ./ppinfra
           config-map: |
-            aws:assumeRoleArn=arn:aws:iam::285951302175:role/pulumi-role
+            aws:assumeRoleArn=arn:aws:iam::727646477053:role/PulumiOIDCRole
             aws:region=us-east-1
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
