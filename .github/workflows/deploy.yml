@@ -26,17 +26,14 @@ jobs:
         working-directory: ./ppinfra
         run: npm install
 
-      - name: Attach Pulumi ESC environment
-        run: pulumi env attach aws-oidc-env
-        working-directory: ./ppinfra
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-
-      - name: Pulumi Up
+      - name: Pulumi Up (with OIDC role)
         uses: pulumi/actions@v5
         with:
           command: up
           stack-name: siddharthpal18/myworkshop/Lab8
           work-dir: ./ppinfra
+          config-map: |
+            aws:assumeRoleArn=arn:aws:iam::285951302175:role/pulumi-role
+            aws:region=us-east-1
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
