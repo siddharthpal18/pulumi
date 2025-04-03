@@ -12,18 +12,25 @@ permissions:
 jobs:
   pulumi-up:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install Dependencies
+      - name: Install dependencies
         working-directory: ./ppinfra
         run: npm install
+
+      - name: Attach Pulumi ESC environment
+        run: pulumi env attach aws-oidc-env
+        working-directory: ./ppinfra
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
       - name: Pulumi Up
         uses: pulumi/actions@v5
@@ -31,6 +38,5 @@ jobs:
           command: up
           stack-name: siddharthpal18/myworkshop/Lab8
           work-dir: ./ppinfra
-          environment: aws-oidc-env    # ✅ THIS IS THE MISSING LINE
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
