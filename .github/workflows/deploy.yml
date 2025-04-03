@@ -10,12 +10,18 @@ permissions:
   contents: read
 
 jobs:
-  pulumi-up:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repo
         uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::727646477053:role/PulumiOIDCRole
+          aws-region: us-east-1
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -26,14 +32,7 @@ jobs:
         working-directory: ./ppinfra
         run: npm install
 
-      - name: Configure AWS OIDC env vars
-        id: aws-creds
-        run: echo "Configured OIDC creds"
-        env:
-          AWS_ROLE_ARN: arn:aws:iam::727646477053:role/PulumiOIDCRole
-          AWS_WEB_IDENTITY_TOKEN_FILE: /tmp/awscreds # Pulumi will use this behind the scenes
-
-      - name: Pulumi Up
+      - name: Pulumi Deploy
         uses: pulumi/actions@v5
         with:
           command: up
@@ -41,5 +40,3 @@ jobs:
           work-dir: ./ppinfra
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          AWS_REGION: us-east-1
-          AWS_ROLE_ARN: arn:aws:iam::727646477053:role/PulumiOIDCRole
