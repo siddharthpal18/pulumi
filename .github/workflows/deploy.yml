@@ -26,14 +26,20 @@ jobs:
         working-directory: ./ppinfra
         run: npm install
 
-      - name: Pulumi Up (via OIDC)
+      - name: Configure AWS OIDC env vars
+        id: aws-creds
+        run: echo "Configured OIDC creds"
+        env:
+          AWS_ROLE_ARN: arn:aws:iam::727646477053:role/PulumiOIDCRole
+          AWS_WEB_IDENTITY_TOKEN_FILE: /tmp/awscreds # Pulumi will use this behind the scenes
+
+      - name: Pulumi Up
         uses: pulumi/actions@v5
         with:
           command: up
           stack-name: siddharthpal18/myworkshop/Lab8
           work-dir: ./ppinfra
-          config-map: |
-            aws:assumeRoleArn=arn:aws:iam::727646477053:role/PulumiOIDCRole
-            aws:region=us-east-1
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          AWS_REGION: us-east-1
+          AWS_ROLE_ARN: arn:aws:iam::727646477053:role/PulumiOIDCRole
